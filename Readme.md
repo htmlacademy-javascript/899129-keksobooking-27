@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Мария Двойнишникова](https://up.htmlacademy.ru/javascript/27/user/899129).
-* Наставник: Максим Прусаков.
+* Наставник: [Максим Прусаков](https://htmlacademy.ru/profile/hikikomori).
 
 ---
 
