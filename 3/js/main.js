@@ -1,16 +1,11 @@
 const SIMILAR_ADVERTISEMENT_COUNT = 10;
 
-const USER_COUNT = {
-  MIN: 1,
-  MAX: 10,
-};
-
-const LATITUDE = {
+const Latitude = {
   MIN: 35.65000,
   MAX: 35.70000,
 };
 
-const LONGITUDE = {
+const Longitude = {
   MIN: 139.70000,
   MAX: 139.80000,
 };
@@ -37,22 +32,22 @@ const TYPE = [
   'hotel',
 ];
 
-const PRICE = {
+const Price = {
   MIN: 500,
   MAX: 30000,
 };
 
-const ROOM_COUNT = {
+const RoomCount = {
   MIN: 1,
   MAX: 5,
 };
 
-const GUEST_COUNT = {
+const GuestCount = {
   MIN: 1,
   MAX: 10,
 };
 
-const TIME = [
+const TIMES = [
   '12:00',
   '13:00',
   '14:00',
@@ -104,22 +99,18 @@ const getRandomPositiveFloat = (a, b, digits = 1) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
 
-const getRandomLatitude = () => getRandomPositiveFloat(LATITUDE.MIN, LATITUDE.MAX, 5);
-const getRandomLongitude = () => getRandomPositiveFloat(LONGITUDE.MIN, LONGITUDE.MAX, 5);
-
-const createAuthor = () => ({
-  avatar: `img/avatars/user${getRandomPositiveInteger(USER_COUNT.MIN, USER_COUNT.MAX).toString().padStart(2, '0')}.png`,
-});
+const getRandomLatitude = () => getRandomPositiveFloat(Latitude.MIN, Latitude.MAX, 5);
+const getRandomLongitude = () => getRandomPositiveFloat(Longitude.MIN, Longitude.MAX, 5);
 
 const createOffer = () => ({
   title: getRandomArrayElement(TITLES),
   address: `${getRandomLatitude()}, ${getRandomLongitude()}`,
-  price: getRandomPositiveInteger(PRICE.MIN, PRICE.MAX),
+  price: getRandomPositiveInteger(Price.MIN, Price.MAX),
   type: getRandomArrayElement(TYPE),
-  rooms: getRandomPositiveInteger(ROOM_COUNT.MIN, ROOM_COUNT.MAX),
-  guests: getRandomPositiveInteger(GUEST_COUNT.MIN, GUEST_COUNT.MAX),
-  checkin: getRandomArrayElement(TIME),
-  checkout: getRandomArrayElement(TIME),
+  rooms: getRandomPositiveInteger(RoomCount.MIN, RoomCount.MAX),
+  guests: getRandomPositiveInteger(GuestCount.MIN, GuestCount.MAX),
+  checkin: getRandomArrayElement(TIMES),
+  checkout: getRandomArrayElement(TIMES),
   features: FEATURES.slice(0, getRandomPositiveInteger(0, FEATURES.length - 1)),
   description: getRandomArrayElement(DESCRIPTION),
   photos: Array.from({length: getRandomPositiveInteger(0, 3)}, () => getRandomArrayElement(PHOTOS)),
@@ -130,11 +121,12 @@ const createLocation = () => ({
   lng: getRandomLongitude(),
 });
 
-const createAdvertisement = () => ({
-  author: createAuthor(),
+const createAdvertisement = (index) => ({
+  author: {
+    avatar: `img/avatars/user${String(++index).padStart(2, '0')}.png`,
+  },
   offer: createOffer(),
   location: createLocation(),
 });
 
-const similarAdvertisements = Array.from({length: SIMILAR_ADVERTISEMENT_COUNT}, createAdvertisement);
-similarAdvertisements();
+const similarAdvertisements = Array.from({length: SIMILAR_ADVERTISEMENT_COUNT}, (_, advertismentIndex) => createAdvertisement(advertismentIndex));
