@@ -43,24 +43,71 @@ const similarListFragment = document.createDocumentFragment();
 
 similarCard.forEach(({author, offer}) => {
   const card = cardTemplate.cloneNode(true);
-  card.querySelector('.popup__avatar').src = author.avatar;
-  card.querySelector('.popup__title').textContent = offer.title;
-  card.querySelector('.popup__text--address').textContent = offer.address;
-  card.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
-  card.querySelector('.popup__type').textContent = TYPES_OF_HOUSING[offer.type];
-  card.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests}`;
-  card.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
-  card.querySelector('.popup__description').textContent = offer.description;
+  if (author.avatar) {
+    card.querySelector('.popup__avatar').src = author.avatar;
+  } else {
+    card.querySelector('.popup__avatar').remove();
+  }
+
+  if (offer.title) {
+    card.querySelector('.popup__title').textContent = offer.title;
+  } else {
+    card.querySelector('.popup__title').remove();
+  }
+
+  if (offer.address) {
+    card.querySelector('.popup__text--address').textContent = offer.address;
+  } else {
+    card.querySelector('.popup__text--address').remove();
+  }
+
+  if (offer.price) {
+    card.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
+  } else {
+    card.querySelector('.popup__text--price').remove();
+  }
+
+  if (offer.type) {
+    card.querySelector('.popup__type').textContent = TYPES_OF_HOUSING[offer.type];
+  } else {
+    card.querySelector('.popup__type').remove();
+  }
+
+  if (offer.rooms && offer.guests) {
+    card.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
+  } else {
+    card.querySelector('.popup__text--capacity').remove();
+  }
+
+  if (offer.checkin && offer.checkout) {
+    card.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
+  } else {
+    card.querySelector('.popup__text--time').remove();
+  }
+
+  if (offer.description) {
+    card.querySelector('.popup__description').textContent = offer.description;
+  } else {
+    card.querySelector('.popup__description').remove();
+  }
 
   const cardFeatures = card.querySelector('.popup__features');
   cardFeatures.innerHTML = '';
-  const newFeatureElements = createFeatures(offer.features);
-  cardFeatures.append(newFeatureElements);
+  if (offer.features) {
+    const newFeatureElements = createFeatures(offer.features);
+    cardFeatures.append(newFeatureElements);
+  } else {
+    cardFeatures.remove();
+  }
 
   const cardPhotos = card.querySelector('.popup__photos');
   cardPhotos.innerHTML = '';
-  const newPhotoElements = createPhotos(offer.photos);
-  cardPhotos.append(newPhotoElements);
+  if (offer.photos) {
+    const newPhotoElements = createPhotos(offer.photos);
+    cardPhotos.append(newPhotoElements);
+  } else {
+    cardPhotos.remove();
+  }
 
   similarListFragment.append(card);
 });
