@@ -43,24 +43,83 @@ const similarListFragment = document.createDocumentFragment();
 
 similarCard.forEach(({author, offer}) => {
   const card = cardTemplate.cloneNode(true);
-  card.querySelector('.popup__avatar').src = author.avatar;
-  card.querySelector('.popup__title').textContent = offer.title;
-  card.querySelector('.popup__text--address').textContent = offer.address;
-  card.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
-  card.querySelector('.popup__type').textContent = TYPES_OF_HOUSING[offer.type];
-  card.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests}`;
-  card.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
-  card.querySelector('.popup__description').textContent = offer.description;
+  const cardAvatar = card.querySelector('.popup__avatar');
+  const cardTitle = card.querySelector('.popup__title');
+  const cardAdress = card.querySelector('.popup__text--address');
+  const cardPrice = card.querySelector('.popup__text--price');
+  const cardType = card.querySelector('.popup__type');
+  const cardCapacity = card.querySelector('.popup__text--capacity');
+  const cardTime = card.querySelector('.popup__text--time');
+  const cardDescription = card.querySelector('.popup__description');
+
+  const {avatar} = author;
+  const {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos} = offer;
+
+  if (avatar) {
+    cardAvatar.src = avatar;
+  } else {
+    cardAvatar.remove();
+  }
+
+  if (title) {
+    cardTitle.textContent = title;
+  } else {
+    cardTitle.remove();
+  }
+
+  if (address) {
+    cardAdress.textContent = address;
+  } else {
+    cardAdress.remove();
+  }
+
+  if (price) {
+    cardPrice.textContent = `${price} ₽/ночь`;
+  } else {
+    cardPrice.remove();
+  }
+
+  if (type) {
+    cardType.textContent = TYPES_OF_HOUSING[type];
+  } else {
+    cardType.remove();
+  }
+
+  if (rooms && guests) {
+    cardCapacity.textContent = `${rooms} комнаты для ${guests} гостей`;
+  } else {
+    cardCapacity.remove();
+  }
+
+  if (checkin && checkout) {
+    cardTime.textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
+  } else {
+    cardTime.remove();
+  }
+
+  if (description) {
+    cardDescription.textContent = description;
+  } else {
+    cardDescription.remove();
+  }
 
   const cardFeatures = card.querySelector('.popup__features');
   cardFeatures.innerHTML = '';
-  const newFeatureElements = createFeatures(offer.features);
-  cardFeatures.append(newFeatureElements);
+  if (features) {
+    const newFeatureElements = createFeatures(features);
+    cardFeatures.append(newFeatureElements);
+  } else {
+    cardFeatures.remove();
+  }
 
   const cardPhotos = card.querySelector('.popup__photos');
   cardPhotos.innerHTML = '';
-  const newPhotoElements = createPhotos(offer.photos);
-  cardPhotos.append(newPhotoElements);
+  if (photos) {
+    const newPhotoElements = createPhotos(photos);
+    cardPhotos.append(newPhotoElements);
+  } else {
+    cardPhotos.remove();
+  }
 
   similarListFragment.append(card);
 });
