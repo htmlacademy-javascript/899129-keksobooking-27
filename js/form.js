@@ -45,30 +45,29 @@ const enableMapFilters = () => {
 
 // Валидация заголовка
 const validateTitle = (value) => value.length >= 30 && value.length <= 100;
-const getWrongTitleMessage = () => 'Необходимо ввести от 30 до 100 символов';
-pristine.addValidator(titleForm, validateTitle, getWrongTitleMessage);
+const wrongTitleMessage = 'Необходимо ввести от 30 до 100 символов';
+pristine.addValidator(titleForm, validateTitle, wrongTitleMessage);
 
 //Валидация цены
-const validatePrice = (value) => value >= 100000;
-const getWrongPriceMessage = () => 'Максимальная стоимость: 100000 руб.';
-pristine.addValidator(priceForm, validatePrice, getWrongPriceMessage);
+const validatePrice = (value) => value <= 100000;
+const wrongPriceMessage = 'Максимальная стоимость составляет 100000';
+pristine.addValidator(priceForm, validatePrice, wrongPriceMessage);
 
 //Валидация количества комнат и количества мест
-const validateCapacity = (value) => {
-  if (roomForm.value === '1' && value !== '1') {
-    return false;
-  } else if (roomForm.value === '2' && value !== '1' && value !== '2') {
-    return false;
-  } else if (roomForm.value === '3' && value === '0') {
-    return false;
-  } else if (roomForm.value === '100' && value !== '0') {
-    return false;
-  } else {
-    return true;
-  }
+const validateCapacity = () => {
+  const roomValue = parseInt(roomForm.value, 10);
+  const capacityValue = parseInt(capacityForm.value, 10);
+  const roomsValidCapacitiesMap = {
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0],
+  };
+  const currentRoomValue = roomsValidCapacitiesMap[roomValue];
+  return currentRoomValue.includes(capacityValue);
 };
-const getWrongCapacityMessage = 'Данное количество гостей недоступно для выбранного количества комнат';
-pristine.addValidator(capacityForm, validateCapacity, getWrongCapacityMessage, true);
+const wrongCapacityMessage = 'Данное количество гостей недоступно';
+pristine.addValidator(capacityForm, validateCapacity, wrongCapacityMessage);
 
 capacityForm.addEventListener('change', () => {
   pristine.validate(capacityForm);
@@ -76,7 +75,9 @@ capacityForm.addEventListener('change', () => {
 
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if (!pristine.validate()) {
+    evt.preventDefault();
+  }
 });
 
 export {
