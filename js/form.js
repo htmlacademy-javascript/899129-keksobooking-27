@@ -7,6 +7,9 @@ const titleForm = adForm.querySelector('#title');
 const priceForm = adForm.querySelector('#price');
 const roomForm = adForm.querySelector('#room_number');
 const capacityForm = adForm.querySelector('#capacity');
+const typeForm = adForm.querySelector('#type');
+const timeinForm = adForm.querySelector('#timein');
+const timeoutForm = adForm.querySelector('#timeout');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -48,12 +51,28 @@ const validateTitle = (value) => value.length >= 30 && value.length <= 100;
 const wrongTitleMessage = 'Необходимо ввести от 30 до 100 символов';
 pristine.addValidator(titleForm, validateTitle, wrongTitleMessage);
 
-//Валидация цены
-const validatePrice = (value) => value <= 100000;
-const wrongPriceMessage = 'Максимальная стоимость составляет 100000';
-pristine.addValidator(priceForm, validatePrice, wrongPriceMessage);
+// Валидация типа жилья и цены
+const TypePriceMap = {
+  'bungalow': 0,
+  'flat': 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000
+};
+const validatePrice = (value) => value >= TypePriceMap[typeForm.value] && value <= 100000;
+const getWrongPriceMessage = (value) => {
+  if (value < TypePriceMap[typeForm.value]) {
+    return `Минимальная стоимость составляет ${TypePriceMap[typeForm.value]}`;
+  }
+  return 'Максимальная стоимость составляет 100000';
+};
+pristine.addValidator(priceForm, validatePrice, getWrongPriceMessage);
 
-//Валидация количества комнат и количества мест
+typeForm.addEventListener('change', () => {
+  priceForm.placeholder = TypePriceMap[typeForm.value];
+});
+
+// Валидация количества комнат и количества мест
 const validateCapacity = () => {
   const roomValue = parseInt(roomForm.value, 10);
   const capacityValue = parseInt(capacityForm.value, 10);
@@ -73,6 +92,16 @@ capacityForm.addEventListener('change', () => {
   pristine.validate(capacityForm);
 });
 
+// Время заезда и выезда
+timeinForm.addEventListener('change', () => {
+  timeoutForm.value = timeinForm.value;
+});
+
+timeoutForm.addEventListener('change', () => {
+  timeinForm.value = timeoutForm.value;
+});
+
+// Валидация формы при отправке
 adForm.addEventListener('submit', (evt) => {
   if (!pristine.validate()) {
     evt.preventDefault();
