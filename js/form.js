@@ -10,6 +10,8 @@ const capacityForm = adForm.querySelector('#capacity');
 const typeForm = adForm.querySelector('#type');
 const timeinForm = adForm.querySelector('#timein');
 const timeoutForm = adForm.querySelector('#timeout');
+const addressForm = adForm.querySelector('#address');
+const slider = adForm.querySelector('.ad-form__slider');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -113,4 +115,7 @@ export {
   disableMapFilters,
   enableAdForm,
   enableMapFilters,
+  addressForm
 };
+
+export {priceForm, slider, typeForm, TypePriceMap};

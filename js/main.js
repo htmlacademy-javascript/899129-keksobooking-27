@@ -1,12 +1,4 @@
 import './card.js';
-import {
-  disableAdForm,
-  disableMapFilters,
-  enableAdForm,
-  enableMapFilters,
-} from './form.js';
-
-disableAdForm();
-disableMapFilters();
-enableAdForm();
-enableMapFilters();
+import './slider.js';
+import './form.js';
+import './map.js';
