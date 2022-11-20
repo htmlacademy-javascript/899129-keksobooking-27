@@ -4,7 +4,7 @@ import {
   getRandomArrayElement
 } from './util.js';
 
-const SIMILAR_ADVERTISEMENT_COUNT = 1;
+const SIMILAR_ADVERTISEMENT_COUNT = 10;
 
 const Latitude = {
   MIN: 35.65000,

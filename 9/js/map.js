@@ -1,7 +1,8 @@
+import {createAdvertisements} from './data.js';
 import {renderCard} from './card.js';
-import {enableAdForm, enableMapFilters, addressForm} from './form.js';
+import {addressForm} from './form.js';
 
-const OFFERS_COUNT = 10;
+const ads = createAdvertisements();
 
 const TokyoCoordinate = {
   LAT: 35.65283,
@@ -10,20 +11,17 @@ const TokyoCoordinate = {
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconSize:[52, 52],
+  iconAnchor: [26, 52],
 });
 
 const pinIcon = L.icon({
   iconUrl: './img/pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
 });
 
-const map = L.map('map-canvas').on('load', () => {
-  enableAdForm();
-  enableMapFilters();
-})
+const map = L.map('map-canvas')
   .setView({
     lat: TokyoCoordinate.LAT,
     lng: TokyoCoordinate.LNG,
@@ -54,7 +52,7 @@ mainPinMarker.on('moveend', (evt) => {
 
 const markerGroup = L.layerGroup().addTo(map);
 
-const addPinIconToMap = (offers) => {
+const addMarkers = (offers) => {
   offers.forEach((offer) => {
     const marker = L.marker({
       lat: offer.location.lat,
@@ -62,10 +60,11 @@ const addPinIconToMap = (offers) => {
     },
     {
       icon: pinIcon
-    })
+    });
+    marker
       .addTo(markerGroup)
       .bindPopup(renderCard(offer));
   });
 };
 
-
+addMarkers(ads);
