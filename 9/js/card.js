@@ -36,18 +36,21 @@ const cardTemplate = document.querySelector('#card')
 
 const renderCard = (dataForAd) => {
   const card = cardTemplate.cloneNode(true);
-  card.querySelector('.popup__avatar').src = dataForAd.author.avatar || '';
-  card.querySelector('.popup__title').textContent = dataForAd.offer.title || '';
-  card.querySelector('.popup__text--address').textContent = dataForAd.offer.address || '';
-  card.querySelector('.popup__text--price').textContent = `${dataForAd.offer.price} ₽/ночь` || '';
-  card.querySelector('.popup__type').textContent = TYPES_OF_HOUSING[dataForAd.offer.type] || '';
-  card.querySelector('.popup__text--capacity').textContent = `${dataForAd.offer.rooms} комнаты для ${dataForAd.offer.guests} гостей` || '';
-  card.querySelector('.popup__text--time').textContent = `Заезд после ${dataForAd.offer.checkin}, выезд до ${dataForAd.offer.checkout}` || '';
-  card.querySelector('.popup__description').textContent = dataForAd.offer.description || '';
+
+  const {avatar} = dataForAd.author;
+  const {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos} = dataForAd.offer;
+
+  card.querySelector('.popup__avatar').src = avatar || '';
+  card.querySelector('.popup__title').textContent = title || '';
+  card.querySelector('.popup__text--address').textContent = address || '';
+  card.querySelector('.popup__text--price').textContent = `${price} ₽/ночь` || '';
+  card.querySelector('.popup__type').textContent = TYPES_OF_HOUSING[type] || '';
+  card.querySelector('.popup__text--capacity').textContent = `${rooms} комнаты для ${guests} гостей` || '';
+  card.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}` || '';
+  card.querySelector('.popup__description').textContent = description || '';
 
   const cardFeatures = card.querySelector('.popup__features');
   cardFeatures.innerHTML = '';
-  const features = dataForAd.offer.features;
   if (features) {
     const newFeatureElements = createFeatures(features);
     cardFeatures.append(newFeatureElements);
@@ -57,7 +60,6 @@ const renderCard = (dataForAd) => {
 
   const cardPhotos = card.querySelector('.popup__photos');
   cardPhotos.innerHTML = '';
-  const photos = dataForAd.offer.photos;
   if (photos) {
     const newPhotoElements = createPhotos(photos);
     cardPhotos.append(newPhotoElements);
