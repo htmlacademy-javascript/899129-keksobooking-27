@@ -1,5 +1,3 @@
-import {createAdvertisements} from './data.js';
-
 const TYPES_OF_HOUSING = {
   'flat': 'Квартира',
   'bungalow': 'Бунгало',
@@ -32,76 +30,24 @@ const createPhotos = (photos) => {
   return photosFragment;
 };
 
-const similarListElement = document.querySelector('#map-canvas');
 const cardTemplate = document.querySelector('#card')
   .content
   .querySelector('.popup');
 
-const similarCard = createAdvertisements();
-
-const similarListFragment = document.createDocumentFragment();
-
-similarCard.forEach(({author, offer}) => {
+const renderCard = (dataForAd) => {
   const card = cardTemplate.cloneNode(true);
-  const cardAvatar = card.querySelector('.popup__avatar');
-  const cardTitle = card.querySelector('.popup__title');
-  const cardAdress = card.querySelector('.popup__text--address');
-  const cardPrice = card.querySelector('.popup__text--price');
-  const cardType = card.querySelector('.popup__type');
-  const cardCapacity = card.querySelector('.popup__text--capacity');
-  const cardTime = card.querySelector('.popup__text--time');
-  const cardDescription = card.querySelector('.popup__description');
 
-  const {avatar} = author;
-  const {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos} = offer;
+  const {avatar} = dataForAd.author;
+  const {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos} = dataForAd.offer;
 
-  if (avatar) {
-    cardAvatar.src = avatar;
-  } else {
-    cardAvatar.remove();
-  }
-
-  if (title) {
-    cardTitle.textContent = title;
-  } else {
-    cardTitle.remove();
-  }
-
-  if (address) {
-    cardAdress.textContent = address;
-  } else {
-    cardAdress.remove();
-  }
-
-  if (price) {
-    cardPrice.textContent = `${price} ₽/ночь`;
-  } else {
-    cardPrice.remove();
-  }
-
-  if (type) {
-    cardType.textContent = TYPES_OF_HOUSING[type];
-  } else {
-    cardType.remove();
-  }
-
-  if (rooms && guests) {
-    cardCapacity.textContent = `${rooms} комнаты для ${guests} гостей`;
-  } else {
-    cardCapacity.remove();
-  }
-
-  if (checkin && checkout) {
-    cardTime.textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
-  } else {
-    cardTime.remove();
-  }
-
-  if (description) {
-    cardDescription.textContent = description;
-  } else {
-    cardDescription.remove();
-  }
+  card.querySelector('.popup__avatar').src = avatar || '';
+  card.querySelector('.popup__title').textContent = title || '';
+  card.querySelector('.popup__text--address').textContent = address || '';
+  card.querySelector('.popup__text--price').textContent = `${price} ₽/ночь` || '';
+  card.querySelector('.popup__type').textContent = TYPES_OF_HOUSING[type] || '';
+  card.querySelector('.popup__text--capacity').textContent = `${rooms} комнаты для ${guests} гостей` || '';
+  card.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}` || '';
+  card.querySelector('.popup__description').textContent = description || '';
 
   const cardFeatures = card.querySelector('.popup__features');
   cardFeatures.innerHTML = '';
@@ -121,7 +67,8 @@ similarCard.forEach(({author, offer}) => {
     cardPhotos.remove();
   }
 
-  similarListFragment.append(card);
-});
+  return card;
 
-similarListElement.append(similarListFragment);
+};
+
+export {renderCard};
