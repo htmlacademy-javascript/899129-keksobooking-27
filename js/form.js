@@ -1,3 +1,12 @@
+import {sendData} from './data.js';
+
+import {
+  showSuccessMessage,
+  showErrorMessage
+} from './popup.js';
+
+import {map, mainPinMarker, TokyoCoordinate} from './map.js';
+
 const adForm = document.querySelector('.ad-form');
 const adFormItems = adForm.querySelectorAll('fieldset');
 const mapFilters = document.querySelector('.map__filters');
@@ -12,6 +21,7 @@ const timeinForm = adForm.querySelector('#timein');
 const timeoutForm = adForm.querySelector('#timeout');
 const addressForm = adForm.querySelector('#address');
 const slider = adForm.querySelector('.ad-form__slider');
+const resetButton = adForm.querySelector('.ad-form__reset');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -103,12 +113,40 @@ timeoutForm.addEventListener('change', () => {
   timeinForm.value = timeoutForm.value;
 });
 
-// Валидация формы при отправке
-adForm.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
+// Reset
+const setCoordinates = (coordinates) => {
+  adFormItems.value = `${(coordinates.lat).toFixed(5)}, ${(coordinates.lng).toFixed(5)}`;
+};
+
+const resetForm = () => {
+  mainPinMarker.setLatLng(TokyoCoordinate);
+  map.setView(TokyoCoordinate, 10);
+  map.closePopup();
+  adForm.reset();
+  slider.noUiSlider.reset();
+  pristine.reset();
+  setCoordinates(mainPinMarker.getLatLng());
+};
+
+resetButton.addEventListener('click', resetForm);
+
+// Отправка формы
+const submitForm = (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    sendData(new FormData(evt.target))
+      .then(() => {
+        showSuccessMessage();
+        resetForm();
+      })
+      .catch(() => {
+        showErrorMessage();
+      });
   }
-});
+};
+
+adForm.addEventListener('submit', submitForm);
 
 export {
   disableAdForm,

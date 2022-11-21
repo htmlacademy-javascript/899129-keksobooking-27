@@ -1,8 +1,6 @@
-import {createAdvertisements} from './data.js';
 import {renderCard} from './card.js';
 import {addressForm} from './form.js';
-
-const ads = createAdvertisements();
+import { getData } from './data.js';
 
 const TokyoCoordinate = {
   LAT: 35.65283,
@@ -67,4 +65,10 @@ const addMarkers = (offers) => {
   });
 };
 
-addMarkers(ads);
+getData()
+  .then((ads) => {
+    addMarkers(ads);
+  })
+  .catch('Не удалось загрузить данные!');
+
+export {map, mainPinMarker, TokyoCoordinate};
