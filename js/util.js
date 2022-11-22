@@ -1,27 +1,24 @@
-const getRandomPositiveInteger = (a, b) => {
-  if (typeof a !== 'number' || typeof b !== 'number' || a < 0 || b < 0) {
-    return NaN;
-  }
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
+const ALERT_SHOW_TIME = 5000;
+
+const showAlert = (message) => {
+  const errorContainer = document.createElement('div');
+  errorContainer.style.zIndex = '100';
+  errorContainer.style.position = 'absolute';
+  errorContainer.style.left = '0';
+  errorContainer.style.top = '0';
+  errorContainer.style.right = '0';
+  errorContainer.style.padding = '10px 3px';
+  errorContainer.style.fontSize = '30px';
+  errorContainer.style.textAlign = 'center';
+  errorContainer.style.backgroundColor = 'red';
+
+  errorContainer.textContent = message;
+
+  document.body.append(errorContainer);
+
+  setTimeout(() => {
+    errorContainer.remove();
+  }, ALERT_SHOW_TIME);
 };
 
-const getRandomPositiveFloat = (a, b, digits = 1) => {
-  if (typeof a !== 'number' || typeof b !== 'number' || typeof digits !== 'number' || a < 0 || b < 0 || digits < 0) {
-    return NaN;
-  }
-  const lower = Math.min(a, b);
-  const upper = Math.max(a, b);
-  const result = Math.random() * (upper - lower) + lower;
-  return +result.toFixed(digits);
-};
-
-const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
-
-export {
-  getRandomPositiveInteger,
-  getRandomPositiveFloat,
-  getRandomArrayElement
-};
+export {showAlert};
