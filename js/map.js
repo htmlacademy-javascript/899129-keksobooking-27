@@ -1,14 +1,18 @@
 import {renderCard} from './card.js';
 import {
-  addressForm,
-  enableAdForm,
-  enableMapFilters,
+  addressForm
 } from './form.js';
 import {getData} from './data.js';
 import {showAlert} from './util.js';
+import {
+  enableMapFilters,
+  disableAdForm,
+  disableMapFilters,
+} from './change-activity.js';
 
 
 const AD_AMOUNT = 10;
+const ERROR_MESSAGE = 'Не удалось соединиться с сервером. Попробуйте снова.';
 
 const TokyoCoordinate = {
   LAT: 35.65283,
@@ -27,11 +31,10 @@ const pinIcon = L.icon({
   iconAnchor: [20, 40],
 });
 
-const map = L.map('map-canvas')
-  .setView({
-    lat: TokyoCoordinate.LAT,
-    lng: TokyoCoordinate.LNG,
-  }, 10);
+disableAdForm();
+disableMapFilters();
+
+const map = L.map('map-canvas');
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -74,9 +77,8 @@ const addMarkers = (offers) => {
 };
 
 getData((ads) => {
-  enableAdForm();
   enableMapFilters();
   addMarkers(ads.slice(0, AD_AMOUNT));
-}, () => showAlert());
+}, () => showAlert(ERROR_MESSAGE));
 
 export {map, mainPinMarker, TokyoCoordinate};
