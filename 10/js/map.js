@@ -1,6 +1,14 @@
 import {renderCard} from './card.js';
-import {addressForm} from './form.js';
-import { getData } from './data.js';
+import {
+  addressForm,
+  enableAdForm,
+  enableMapFilters,
+} from './form.js';
+import {getData} from './data.js';
+import {showAlert} from './util.js';
+
+
+const AD_AMOUNT = 10;
 
 const TokyoCoordinate = {
   LAT: 35.65283,
@@ -45,7 +53,7 @@ const mainPinMarker = L.marker(
 
 mainPinMarker.on('moveend', (evt) => {
   const {lat, lng} = evt.target.getLatLng();
-  addressForm.value = `lat: ${lat.toFixed(5)},  lng: ${lng.toFixed(5)}`;
+  addressForm.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 });
 
 const markerGroup = L.layerGroup().addTo(map);
@@ -65,10 +73,10 @@ const addMarkers = (offers) => {
   });
 };
 
-getData()
-  .then((ads) => {
-    addMarkers(ads);
-  })
-  .catch('Не удалось загрузить данные!');
+getData((ads) => {
+  enableAdForm();
+  enableMapFilters();
+  addMarkers(ads.slice(0, AD_AMOUNT));
+}, () => showAlert());
 
 export {map, mainPinMarker, TokyoCoordinate};
