@@ -1,7 +1,7 @@
 import {
-  addMarkers
+  addMarkers,
+  clearMarkers
 } from './map.js';
-import { debounce } from './util.js';
 
 const mapFilter = document.querySelector('.map__filters');
 const typeFilter = mapFilter.querySelector('#housing-type');
@@ -9,58 +9,60 @@ const priceFilter = mapFilter.querySelector('#housing-price');
 const roomsFilter = mapFilter.querySelector('#housing-rooms');
 const guestsFilter = mapFilter.querySelector('#housing-guests');
 const featuresFilter = mapFilter.querySelector('#housing-features');
-const wifi = mapFilter.querySelector('#filter-wifi');
-const dishwasher = mapFilter.querySelector('#filter-dishwasher');
-const parking = mapFilter.querySelector('#filter-parking');
-const washer = mapFilter.querySelector('#filter-washer');
-const elevator = mapFilter.querySelector('#filter-elevator');
-const conditioner = mapFilter.querySelector('#filter-conditioner');
-
-const priceRangeFilter = {
-  low: {
-    from: 0,
-    to: 10000,
-  },
-  middle: {
-    from: 10000,
-    to: 50000,
-  },
-  high: {
-    from: 50000,
-    to: 100000,
-  },
-};
 
 const DEFAULT_FILTER = 'any';
 const AMOUNT_ADS = 10;
+const LOW_PRICE = 10000;
+const HIGH_PRISE = 50000;
 
 const isMatchType = (ad) => typeFilter.value === ad.offer.type || typeFilter.value === DEFAULT_FILTER;
-const isMatchRooms = (ad) => roomsFilter.value === ad.offer.rooms || roomsFilter.value === DEFAULT_FILTER;
-const isMatchGuests = (ad) => guestsFilter.value === ad.offer.capicity || guestsFilter.value === DEFAULT_FILTER;
+const isMatchRooms = (ad) => +roomsFilter.value === ad.offer.rooms || roomsFilter.value === DEFAULT_FILTER;
+const isMatchGuests = (ad) => +guestsFilter.value === ad.offer.guests || guestsFilter.value === DEFAULT_FILTER;
 
-const isWifiChecked = (ad) => wifi.checked === true && ad.offer.features.include('wifi');
-const isDishwasherChecked = (ad) => dishwasher.checked === true && ad.offer.features.include('dishwasher');
-const isParkingChecked = (ad) => parking.checked === true && ad.offer.features.include('parking');
-const isWasherChecked = (ad) => washer.checked === true && ad.offer.features.include('washer');
-const isElevatorChecked = (ad) => elevator.checked === true && ad.offer.features.include('elevator');
-const isConditionerChecked = (ad) => conditioner.checked === true && ad.offer.features.include('conditioner');
+const isMatchPrice = (ad) => {
+  let priceRange;
+  if (ad.offer.price >= LOW_PRICE && ad.offer.price < HIGH_PRISE) {
+    priceRange = 'middle';
+  } else if (ad.offer.price < LOW_PRICE) {
+    priceRange = 'low';
+  } else if (ad.offer.price >= HIGH_PRISE) {
+    priceRange = 'high';
+  }
+  return priceFilter.value === priceRange || priceFilter.value === 'any';
+};
 
-const onAddFilteredAds = (data) => {
+const isMatchFeatures = (ad, checkedFeatures) => {
+  if (!ad.offer.features) {
+    return false;
+  }
+  return checkedFeatures.every((checkedFeature) => ad.offer.features.includes(checkedFeature));
+};
+
+const renderFilteredAds = (ads) => {
+  const chosenFeatures = Array
+    .from(featuresFilter.querySelectorAll('input[type="checkbox"]:checked'))
+    .map((feature) => feature.value);
   const filteredAds = [];
-  for (let i = 0; i < data.length; i++) {
-    const ad = data[i];
-    if (isMatchType(ad) && isMatchRooms(ad) && isMatchGuests(ad) && isWifiChecked(ad) && isDishwasherChecked(ad) && isParkingChecked(ad) && isWasherChecked(ad) && isElevatorChecked(ad) && isConditionerChecked(ad)) {
+  for (let i = 0; i < ads.length; i++) {
+    const ad = ads[i];
+    if (isMatchType(ad) && isMatchRooms(ad) && isMatchGuests(ad) && isMatchPrice(ad) && isMatchFeatures(ad, chosenFeatures)) {
       filteredAds.push(ad);
-
     }
     if (filteredAds.length === AMOUNT_ADS) {
       break;
     }
   }
+  clearMarkers();
   addMarkers(filteredAds);
 };
 
+const addFilter = (cb) => {
+  mapFilter.addEventListener('change', () => {
+    cb();
+  });
+};
 
-mapFilter.addEventListener('change', onAddFilteredAds);
-
-export {onAddFilteredAds};
+export {
+  renderFilteredAds,
+  addFilter
+};
