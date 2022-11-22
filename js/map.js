@@ -9,9 +9,8 @@ import {
   disableAdForm,
   disableMapFilters,
 } from './change-activity.js';
+import {onAddFilteredAds} from './filter.js';
 
-
-const AD_AMOUNT = 10;
 const ERROR_MESSAGE = 'Не удалось соединиться с сервером. Попробуйте снова.';
 
 const TokyoCoordinate = {
@@ -78,7 +77,7 @@ const addMarkers = (offers) => {
 
 getData((ads) => {
   enableMapFilters();
-  addMarkers(ads.slice(0, AD_AMOUNT));
+  onAddFilteredAds(ads);
 }, () => showAlert(ERROR_MESSAGE));
 
-export {map, mainPinMarker, TokyoCoordinate};
+export {map, mainPinMarker, TokyoCoordinate, addMarkers};

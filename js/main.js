@@ -3,6 +3,7 @@ import './slider.js';
 import {addressForm} from './form.js';
 import {enableAdForm} from './change-activity.js';
 import {map, TokyoCoordinate} from './map.js';
+import './filter.js';
 
 map.on('load', () => {
   enableAdForm();
@@ -12,3 +13,5 @@ map.on('load', () => {
     lat: TokyoCoordinate.LAT,
     lng: TokyoCoordinate.LNG
   }, 10);
+
+
