@@ -1,8 +1,18 @@
-import {createAdvertisements} from './data.js';
 import {renderCard} from './card.js';
-import {addressForm} from './form.js';
+import {
+  addressForm
+} from './form.js';
+import {getData} from './data.js';
+import {showAlert} from './util.js';
+import {
+  enableMapFilters,
+  disableAdForm,
+  disableMapFilters,
+} from './change-activity.js';
 
-const ads = createAdvertisements();
+
+const AD_AMOUNT = 10;
+const ERROR_MESSAGE = 'Не удалось соединиться с сервером. Попробуйте снова.';
 
 const TokyoCoordinate = {
   LAT: 35.65283,
@@ -21,11 +31,10 @@ const pinIcon = L.icon({
   iconAnchor: [20, 40],
 });
 
-const map = L.map('map-canvas')
-  .setView({
-    lat: TokyoCoordinate.LAT,
-    lng: TokyoCoordinate.LNG,
-  }, 10);
+disableAdForm();
+disableMapFilters();
+
+const map = L.map('map-canvas');
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -47,7 +56,7 @@ const mainPinMarker = L.marker(
 
 mainPinMarker.on('moveend', (evt) => {
   const {lat, lng} = evt.target.getLatLng();
-  addressForm.value = `lat: ${lat.toFixed(5)},  lng: ${lng.toFixed(5)}`;
+  addressForm.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 });
 
 const markerGroup = L.layerGroup().addTo(map);
@@ -67,4 +76,9 @@ const addMarkers = (offers) => {
   });
 };
 
-addMarkers(ads);
+getData((ads) => {
+  enableMapFilters();
+  addMarkers(ads.slice(0, AD_AMOUNT));
+}, () => showAlert(ERROR_MESSAGE));
+
+export {map, mainPinMarker, TokyoCoordinate};

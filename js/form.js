@@ -1,8 +1,11 @@
-const adForm = document.querySelector('.ad-form');
-const adFormItems = adForm.querySelectorAll('fieldset');
-const mapFilters = document.querySelector('.map__filters');
-const mapFiltersItems = mapFilters.children;
+import {sendData} from './data.js';
+import {
+  showSuccessMessage,
+  showErrorMessage
+} from './popup.js';
+import {map, mainPinMarker, TokyoCoordinate} from './map.js';
 
+const adForm = document.querySelector('.ad-form');
 const titleForm = adForm.querySelector('#title');
 const priceForm = adForm.querySelector('#price');
 const roomForm = adForm.querySelector('#room_number');
@@ -12,6 +15,7 @@ const timeinForm = adForm.querySelector('#timein');
 const timeoutForm = adForm.querySelector('#timeout');
 const addressForm = adForm.querySelector('#address');
 const slider = adForm.querySelector('.ad-form__slider');
+const resetButton = adForm.querySelector('.ad-form__reset');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -19,34 +23,6 @@ const pristine = new Pristine(adForm, {
   errorTextParent: 'ad-form__element',
   errorTextClass: 'text-help',
 });
-
-const disableAdForm = () => {
-  adForm.classList.add('ad-form--disabled');
-  for (const element of adFormItems) {
-    element.setAttribute('disabled', 'disabled');
-  }
-};
-
-const disableMapFilters = () => {
-  mapFilters.classList.add('map__filters--disabled');
-  for (const element of mapFiltersItems) {
-    element.setAttribute('disabled', 'disabled');
-  }
-};
-
-const enableAdForm = () => {
-  adForm.classList.remove('ad-form--disabled');
-  for (const element of adFormItems) {
-    element.removeAttribute('disabled');
-  }
-};
-
-const enableMapFilters = () => {
-  mapFilters.classList.remove('map__filters--disabled');
-  for (const element of mapFiltersItems) {
-    element.removeAttribute('disabled');
-  }
-};
 
 // Валидация заголовка
 const validateTitle = (value) => value.length >= 30 && value.length <= 100;
@@ -103,19 +79,57 @@ timeoutForm.addEventListener('change', () => {
   timeinForm.value = timeoutForm.value;
 });
 
-// Валидация формы при отправке
-adForm.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
-  }
-});
-
-export {
-  disableAdForm,
-  disableMapFilters,
-  enableAdForm,
-  enableMapFilters,
-  addressForm
+// Reset
+const setCoordinates = (coordinates) => {
+  addressForm.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
 };
 
-export {priceForm, slider, typeForm, TypePriceMap};
+const resetForm = () => {
+  adForm.reset();
+  mainPinMarker.setLatLng({
+    lat: TokyoCoordinate.LAT,
+    lng: TokyoCoordinate.LNG
+  });
+  map.setView({
+    lat: TokyoCoordinate.LAT,
+    lng: TokyoCoordinate.LNG
+  }, 10);
+  map.closePopup();
+  slider.noUiSlider.reset();
+  setCoordinates(mainPinMarker.getLatLng());
+};
+
+
+const onResetButtonClick = (evt) => {
+  evt.preventDefault();
+  resetForm();
+};
+
+resetButton.addEventListener('click', onResetButtonClick);
+
+// Отправка формы
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  if (pristine.validate()) {
+    sendData(
+      () => {
+        showSuccessMessage();
+        resetForm();
+      },
+      () => {
+        showErrorMessage();
+      },
+      new FormData(evt.target),
+    );
+  }
+};
+
+adForm.addEventListener('submit', onFormSubmit);
+
+export {
+  addressForm,
+  priceForm,
+  slider,
+  typeForm,
+  TypePriceMap,
+};
