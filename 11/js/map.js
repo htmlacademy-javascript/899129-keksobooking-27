@@ -1,15 +1,16 @@
 import {renderCard} from './card.js';
-import {
-  addressForm
-} from './form.js';
+import {addressForm} from './form.js';
 import {getData} from './data.js';
-import {showAlert} from './util.js';
+import {showAlert, debounce} from './util.js';
 import {
   enableMapFilters,
   disableAdForm,
   disableMapFilters,
 } from './change-activity.js';
-import {onAddFilteredAds} from './filter.js';
+import {
+  renderFilteredAds,
+  addFilter} from './filter.js';
+
 
 const ERROR_MESSAGE = 'Не удалось соединиться с сервером. Попробуйте снова.';
 
@@ -59,6 +60,7 @@ mainPinMarker.on('moveend', (evt) => {
 });
 
 const markerGroup = L.layerGroup().addTo(map);
+const clearMarkers = () => markerGroup.clearLayers();
 
 const addMarkers = (offers) => {
   offers.forEach((offer) => {
@@ -77,7 +79,8 @@ const addMarkers = (offers) => {
 
 getData((ads) => {
   enableMapFilters();
-  onAddFilteredAds(ads);
+  renderFilteredAds(ads);
+  addFilter(debounce(() => renderFilteredAds(ads), 500));
 }, () => showAlert(ERROR_MESSAGE));
 
-export {map, mainPinMarker, TokyoCoordinate, addMarkers};
+export {map, mainPinMarker, TokyoCoordinate, addMarkers, clearMarkers};

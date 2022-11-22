@@ -4,7 +4,7 @@ const MAX_SLIDER_RANGE = 100000;
 
 noUiSlider.create(slider, {
   range: {
-    min: TypePriceMap[typeForm.value],
+    min: 0,
     max: MAX_SLIDER_RANGE,
   },
   start: TypePriceMap[typeForm.value],

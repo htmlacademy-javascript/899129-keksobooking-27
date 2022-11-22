@@ -46,9 +46,11 @@ const getWrongPriceMessage = (value) => {
 };
 pristine.addValidator(priceForm, validatePrice, getWrongPriceMessage);
 
-typeForm.addEventListener('change', () => {
+const onTypeOfLivingChange = () => {
   priceForm.placeholder = TypePriceMap[typeForm.value];
-});
+};
+
+typeForm.addEventListener('change', onTypeOfLivingChange);
 
 // Валидация количества комнат и количества мест
 const validateCapacity = () => {
