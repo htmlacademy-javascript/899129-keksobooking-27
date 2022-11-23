@@ -4,6 +4,7 @@ import {
   showErrorMessage
 } from './popup.js';
 import {map, mainPinMarker, TokyoCoordinate} from './map.js';
+import {mapFilter} from './filter.js';
 
 const adForm = document.querySelector('.ad-form');
 const titleForm = adForm.querySelector('#title');
@@ -46,9 +47,11 @@ const getWrongPriceMessage = (value) => {
 };
 pristine.addValidator(priceForm, validatePrice, getWrongPriceMessage);
 
-typeForm.addEventListener('change', () => {
+const onTypeOfLivingChange = () => {
   priceForm.placeholder = TypePriceMap[typeForm.value];
-});
+};
+
+typeForm.addEventListener('change', onTypeOfLivingChange);
 
 // Валидация количества комнат и количества мест
 const validateCapacity = () => {
@@ -95,16 +98,15 @@ const resetForm = () => {
     lng: TokyoCoordinate.LNG
   }, 10);
   map.closePopup();
+  mapFilter.reset();
   slider.noUiSlider.reset();
   setCoordinates(mainPinMarker.getLatLng());
 };
-
 
 const onResetButtonClick = (evt) => {
   evt.preventDefault();
   resetForm();
 };
-
 resetButton.addEventListener('click', onResetButtonClick);
 
 // Отправка формы
@@ -132,4 +134,6 @@ export {
   slider,
   typeForm,
   TypePriceMap,
+  resetButton,
+  resetForm
 };
