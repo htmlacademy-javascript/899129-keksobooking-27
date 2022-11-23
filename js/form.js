@@ -5,6 +5,7 @@ import {
 } from './popup.js';
 import {map, mainPinMarker, TokyoCoordinate} from './map.js';
 import {mapFilter} from './filter.js';
+import {clearPictures} from './picture.js';
 
 const adForm = document.querySelector('.ad-form');
 const titleForm = adForm.querySelector('#title');
@@ -100,6 +101,7 @@ const resetForm = () => {
   map.closePopup();
   mapFilter.reset();
   slider.noUiSlider.reset();
+  clearPictures();
   setCoordinates(mainPinMarker.getLatLng());
 };
 

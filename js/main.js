@@ -1,4 +1,5 @@
 import './card.js';
+import './picture.js';
 import './slider.js';
 import {addressForm} from './form.js';
 import {enableAdForm} from './change-activity.js';
