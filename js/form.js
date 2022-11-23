@@ -103,6 +103,12 @@ const resetForm = () => {
   setCoordinates(mainPinMarker.getLatLng());
 };
 
+const onResetButtonClick = (evt) => {
+  evt.preventDefault();
+  resetForm();
+};
+resetButton.addEventListener('click', onResetButtonClick);
+
 // Отправка формы
 const onFormSubmit = (evt) => {
   evt.preventDefault();

@@ -2,7 +2,6 @@ import {
   addMarkers,
   clearMarkers
 } from './map.js';
-import {resetButton, resetForm} from './form.js';
 
 const mapFilter = document.querySelector('.map__filters');
 const typeFilter = mapFilter.querySelector('#housing-type');
@@ -61,9 +60,7 @@ const addFilter = (cb) => {
     cb();
   });
 
-  resetButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    resetForm();
+  mapFilter.addEventListener('reset', () => {
     cb();
   });
 };
