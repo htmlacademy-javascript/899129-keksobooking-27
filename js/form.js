@@ -4,6 +4,7 @@ import {
   showErrorMessage
 } from './popup.js';
 import {map, mainPinMarker, TokyoCoordinate} from './map.js';
+import {mapFilter} from './filter.js';
 
 const adForm = document.querySelector('.ad-form');
 const titleForm = adForm.querySelector('#title');
@@ -97,36 +98,38 @@ const resetForm = () => {
     lng: TokyoCoordinate.LNG
   }, 10);
   map.closePopup();
+  mapFilter.reset();
   slider.noUiSlider.reset();
   setCoordinates(mainPinMarker.getLatLng());
 };
 
-
-const onResetButtonClick = (evt) => {
-  evt.preventDefault();
-  resetForm();
+const onClickResetButton = (cb) => {
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    resetForm();
+    cb();
+  });
 };
-
-resetButton.addEventListener('click', onResetButtonClick);
 
 // Отправка формы
-const onFormSubmit = (evt) => {
-  evt.preventDefault();
-  if (pristine.validate()) {
-    sendData(
-      () => {
-        showSuccessMessage();
-        resetForm();
-      },
-      () => {
-        showErrorMessage();
-      },
-      new FormData(evt.target),
-    );
-  }
+const onFormSubmit = (cb) => {
+  adForm.addEventListener = ('submit', (evt) => {
+    evt.preventDefault();
+    if (pristine.validate()) {
+      sendData(
+        () => {
+          showSuccessMessage();
+          resetForm();
+          cb();
+        },
+        () => {
+          showErrorMessage();
+        },
+        new FormData(evt.target),
+      );
+    }
+  });
 };
-
-adForm.addEventListener('submit', onFormSubmit);
 
 export {
   addressForm,
@@ -134,4 +137,6 @@ export {
   slider,
   typeForm,
   TypePriceMap,
+  onFormSubmit,
+  onClickResetButton
 };

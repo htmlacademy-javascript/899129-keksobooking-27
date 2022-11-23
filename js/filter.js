@@ -40,8 +40,7 @@ const isMatchFeatures = (ad, checkedFeatures) => {
 
 const renderFilteredAds = (ads) => {
   const chosenFeatures = Array
-    .from(featuresFilter.querySelectorAll('input[type="checkbox"]:checked'))
-    .map((feature) => feature.value);
+    .from(featuresFilter.querySelectorAll('input[type="checkbox"]:checked'), (feature) => feature.value);
   const filteredAds = [];
   for (let i = 0; i < ads.length; i++) {
     const ad = ads[i];
@@ -64,5 +63,6 @@ const addFilter = (cb) => {
 
 export {
   renderFilteredAds,
-  addFilter
+  addFilter,
+  mapFilter,
 };
