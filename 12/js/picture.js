@@ -1,7 +1,8 @@
-const avatarInput = document.querySelector('.ad-form__field');
-const avatarPreview = document.querySelector('.ad-form-header__preview');
-const photoInput = document.querySelector('.ad-form__upload');
+const avatarInput = document.querySelector('.ad-form__field input');
+const avatarPreview = document.querySelector('.ad-form-header__preview img');
+const photoInput = document.querySelector('.ad-form__upload input');
 const photoPreview = document.querySelector('.ad-form__photo');
+const photoForPreview = document.createElement('img');
 
 const DEFAULT_AVATAR = 'img/muffin-grey.svg';
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
@@ -11,8 +12,8 @@ const isMatchTypeFile = (file, fileType) => {
   return fileType.some((it) => fileName.endsWith(it));
 };
 
-const onAvatarInput = () => {
-  const file = avatarInput.files[0];
+const onAvatarInput = (evt) => {
+  const file = evt.target.files[0];
   const isValid = isMatchTypeFile(file, FILE_TYPES);
 
   if (isValid) {
@@ -26,8 +27,6 @@ const onPhotoInput = () => {
   const isValid = isMatchTypeFile(file, FILE_TYPES);
 
   if (isValid) {
-    const photoForPreview = document.createElement('img');
-
     photoForPreview.src = URL.createObjectURL(file);
     photoForPreview.width = 70;
     photoForPreview.height = 70;
@@ -39,7 +38,11 @@ const onPhotoInput = () => {
 photoInput.addEventListener('change', onPhotoInput);
 
 const clearPictures = () => {
-  avatarInput.src = DEFAULT_AVATAR;
+  avatarPreview.src = DEFAULT_AVATAR;
+
+  if (photoForPreview.parentNode) {
+    photoForPreview.parentNode.removeChild(photoForPreview);
+  }
 };
 
 export {clearPictures};
