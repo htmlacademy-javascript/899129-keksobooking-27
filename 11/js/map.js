@@ -1,8 +1,6 @@
 import {renderCard} from './card.js';
 import {
   addressForm,
-  onFormSubmit,
-  onClickResetButton
 } from './form.js';
 import {getData} from './data.js';
 import {showAlert, debounce} from './util.js';
@@ -86,8 +84,6 @@ getData((ads) => {
   enableMapFilters();
   renderFilteredAds(ads);
   addFilter(debounce(() => renderFilteredAds(ads), 500));
-  onFormSubmit(() => renderFilteredAds(ads));
-  onClickResetButton(() => renderFilteredAds(ads));
 }, () => showAlert(ERROR_MESSAGE));
 
 export {map, mainPinMarker, TokyoCoordinate, addMarkers, clearMarkers};

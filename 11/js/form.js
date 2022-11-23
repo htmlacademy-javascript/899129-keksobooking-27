@@ -103,33 +103,24 @@ const resetForm = () => {
   setCoordinates(mainPinMarker.getLatLng());
 };
 
-const onClickResetButton = (cb) => {
-  resetButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    resetForm();
-    cb();
-  });
+// Отправка формы
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  if (pristine.validate()) {
+    sendData(
+      () => {
+        showSuccessMessage();
+        resetForm();
+      },
+      () => {
+        showErrorMessage();
+      },
+      new FormData(evt.target),
+    );
+  }
 };
 
-// Отправка формы
-const onFormSubmit = (cb) => {
-  adForm.addEventListener = ('submit', (evt) => {
-    evt.preventDefault();
-    if (pristine.validate()) {
-      sendData(
-        () => {
-          showSuccessMessage();
-          resetForm();
-          cb();
-        },
-        () => {
-          showErrorMessage();
-        },
-        new FormData(evt.target),
-      );
-    }
-  });
-};
+adForm.addEventListener('submit', onFormSubmit);
 
 export {
   addressForm,
@@ -137,6 +128,6 @@ export {
   slider,
   typeForm,
   TypePriceMap,
-  onFormSubmit,
-  onClickResetButton
+  resetButton,
+  resetForm
 };
