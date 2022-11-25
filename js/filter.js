@@ -3,21 +3,21 @@ import {
   clearMarkers
 } from './map.js';
 
-const mapFilter = document.querySelector('.map__filters');
-const typeFilter = mapFilter.querySelector('#housing-type');
-const priceFilter = mapFilter.querySelector('#housing-price');
-const roomsFilter = mapFilter.querySelector('#housing-rooms');
-const guestsFilter = mapFilter.querySelector('#housing-guests');
-const featuresFilter = mapFilter.querySelector('#housing-features');
-
 const DEFAULT_FILTER = 'any';
 const AMOUNT_ADS = 10;
 const LOW_PRICE = 10000;
 const HIGH_PRISE = 50000;
 
-const isMatchType = (ad) => typeFilter.value === ad.offer.type || typeFilter.value === DEFAULT_FILTER;
-const isMatchRooms = (ad) => +roomsFilter.value === ad.offer.rooms || roomsFilter.value === DEFAULT_FILTER;
-const isMatchGuests = (ad) => +guestsFilter.value === ad.offer.guests || guestsFilter.value === DEFAULT_FILTER;
+const mapFilterElement = document.querySelector('.map__filters');
+const typeFilterElement = mapFilterElement.querySelector('#housing-type');
+const priceFilterElement = mapFilterElement.querySelector('#housing-price');
+const roomsFilterElement = mapFilterElement.querySelector('#housing-rooms');
+const guestsFilterElement = mapFilterElement.querySelector('#housing-guests');
+const featuresFilterElement = mapFilterElement.querySelector('#housing-features');
+
+const isMatchType = (ad) => typeFilterElement.value === ad.offer.type || typeFilterElement.value === DEFAULT_FILTER;
+const isMatchRooms = (ad) => +roomsFilterElement.value === ad.offer.rooms || roomsFilterElement.value === DEFAULT_FILTER;
+const isMatchGuests = (ad) => +guestsFilterElement.value === ad.offer.guests || guestsFilterElement.value === DEFAULT_FILTER;
 
 const isMatchPrice = (ad) => {
   let priceRange;
@@ -28,7 +28,7 @@ const isMatchPrice = (ad) => {
   } else if (ad.offer.price >= HIGH_PRISE) {
     priceRange = 'high';
   }
-  return priceFilter.value === priceRange || priceFilter.value === 'any';
+  return priceFilterElement.value === priceRange || priceFilterElement.value === 'any';
 };
 
 const isMatchFeatures = (ad, checkedFeatures) => {
@@ -40,7 +40,7 @@ const isMatchFeatures = (ad, checkedFeatures) => {
 
 const renderFilteredAds = (ads) => {
   const chosenFeatures = Array
-    .from(featuresFilter.querySelectorAll('input[type="checkbox"]:checked'), (feature) => feature.value);
+    .from(featuresFilterElement.querySelectorAll('input[type="checkbox"]:checked'), (feature) => feature.value);
   const filteredAds = [];
   for (let i = 0; i < ads.length; i++) {
     const ad = ads[i];
@@ -56,11 +56,11 @@ const renderFilteredAds = (ads) => {
 };
 
 const addFilter = (cb) => {
-  mapFilter.addEventListener('change', () => {
+  mapFilterElement.addEventListener('change', () => {
     cb();
   });
 
-  mapFilter.addEventListener('reset', () => {
+  mapFilterElement.addEventListener('reset', () => {
     cb();
   });
 };
@@ -68,5 +68,5 @@ const addFilter = (cb) => {
 export {
   renderFilteredAds,
   addFilter,
-  mapFilter,
+  mapFilterElement,
 };

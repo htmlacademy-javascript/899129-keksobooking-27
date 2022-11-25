@@ -1,43 +1,43 @@
-const successMessage = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
-const errorMessage = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
-const errorButton = errorMessage.querySelector('.error__button');
+const successMessageElement = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
+const errorMessageElement = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+const errorButtonElement = errorMessageElement.querySelector('.error__button');
 
 const showSuccessMessage = () => {
-  document.body.append(successMessage);
+  document.body.append(successMessageElement);
 
   const onEscPress = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      successMessage.remove();
+      successMessageElement.remove();
       document.removeEventListener('keydown', onEscPress);
     }
   };
 
   document.addEventListener('keydown', onEscPress);
-  successMessage.addEventListener('click', () => {
-    successMessage.remove();
+  successMessageElement.addEventListener('click', () => {
+    successMessageElement.remove();
     document.removeEventListener('keydown', onEscPress);
   }, {once: true});
 };
 
 const showErrorMessage = () => {
-  document.body.append(errorMessage);
+  document.body.append(errorMessageElement);
 
   const onEscPress = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      errorMessage.remove();
+      errorMessageElement.remove();
       document.removeEventListener('keydown', onEscPress);
     }
   };
 
   document.addEventListener('keydown', onEscPress);
-  errorMessage.addEventListener('click', () => {
-    errorMessage.remove();
+  errorMessageElement.addEventListener('click', () => {
+    errorMessageElement.remove();
     document.removeEventListener('keydown', onEscPress);
   }, {once: true});
-  errorButton.addEventListener('mousedown', () => {
-    errorMessage.remove();
+  errorButtonElement.addEventListener('mousedown', () => {
+    errorMessageElement.remove();
     document.removeEventListener('keydown', onEscPress);
   }, {once: true});
 };

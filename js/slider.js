@@ -1,13 +1,13 @@
-import {priceForm, slider, typeForm, TypePriceMap} from './form.js';
+import {priceFormElement, sliderElement, typeFormElement, TypePriceMap} from './form.js';
 
 const MAX_SLIDER_RANGE = 100000;
 
-noUiSlider.create(slider, {
+noUiSlider.create(sliderElement, {
   range: {
     min: 0,
     max: MAX_SLIDER_RANGE,
   },
-  start: TypePriceMap[typeForm.value],
+  start: TypePriceMap[typeFormElement.value],
   step: 1,
   connect: 'lower',
   format: {
@@ -16,10 +16,10 @@ noUiSlider.create(slider, {
   }
 });
 
-slider.noUiSlider.on('update', () => {
-  priceForm.value = slider.noUiSlider.get();
+sliderElement.noUiSlider.on('update', () => {
+  priceFormElement.value = sliderElement.noUiSlider.get();
 });
 
-priceForm.addEventListener('change', () => {
-  slider.noUiSlider.set(priceForm.value);
+priceFormElement.addEventListener('change', () => {
+  sliderElement.noUiSlider.set(priceFormElement.value);
 });

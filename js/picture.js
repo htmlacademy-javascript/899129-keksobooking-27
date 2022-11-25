@@ -1,11 +1,11 @@
-const avatarInput = document.querySelector('.ad-form__field input');
-const avatarPreview = document.querySelector('.ad-form-header__preview img');
-const photoInput = document.querySelector('.ad-form__upload input');
-const photoPreview = document.querySelector('.ad-form__photo');
-const photoForPreview = document.createElement('img');
-
 const DEFAULT_AVATAR = 'img/muffin-grey.svg';
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
+const avatarInputElement = document.querySelector('.ad-form__field input');
+const avatarPreviewElement = document.querySelector('.ad-form-header__preview img');
+const photoInputElement = document.querySelector('.ad-form__upload input');
+const photoPreviewElement = document.querySelector('.ad-form__photo');
+const photoForPreviewElement = document.createElement('img');
 
 const isMatchTypeFile = (file, fileType) => {
   const fileName = file.name.toLowerCase();
@@ -17,31 +17,31 @@ const onAvatarInput = (evt) => {
   const isValid = isMatchTypeFile(file, FILE_TYPES);
 
   if (isValid) {
-    avatarPreview.src = URL.createObjectURL(file);
+    avatarPreviewElement.src = URL.createObjectURL(file);
   }
 };
-avatarInput.addEventListener('change', onAvatarInput);
+avatarInputElement.addEventListener('change', onAvatarInput);
 
 const onPhotoInput = () => {
-  const file = photoInput.files[0];
+  const file = photoInputElement.files[0];
   const isValid = isMatchTypeFile(file, FILE_TYPES);
 
   if (isValid) {
-    photoForPreview.src = URL.createObjectURL(file);
-    photoForPreview.width = 70;
-    photoForPreview.height = 70;
-    photoForPreview.alt = 'Фотография жилья';
+    photoForPreviewElement.src = URL.createObjectURL(file);
+    photoForPreviewElement.width = 70;
+    photoForPreviewElement.height = 70;
+    photoForPreviewElement.alt = 'Фотография жилья';
 
-    photoPreview.append(photoForPreview);
+    photoPreviewElement.append(photoForPreviewElement);
   }
 };
-photoInput.addEventListener('change', onPhotoInput);
+photoInputElement.addEventListener('change', onPhotoInput);
 
 const clearPictures = () => {
-  avatarPreview.src = DEFAULT_AVATAR;
+  avatarPreviewElement.src = DEFAULT_AVATAR;
 
-  if (photoForPreview.parentNode) {
-    photoForPreview.parentNode.removeChild(photoForPreview);
+  if (photoForPreviewElement.parentNode) {
+    photoForPreviewElement.parentNode.removeChild(photoForPreviewElement);
   }
 };
 
