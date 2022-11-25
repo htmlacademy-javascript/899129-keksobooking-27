@@ -4,22 +4,26 @@ import {
   showErrorMessage
 } from './popup.js';
 import {map, mainPinMarker, TokyoCoordinate} from './map.js';
-import {mapFilter} from './filter.js';
+import {mapFilterElement} from './filter.js';
 import {clearPictures} from './picture.js';
 
-const adForm = document.querySelector('.ad-form');
-const titleForm = adForm.querySelector('#title');
-const priceForm = adForm.querySelector('#price');
-const roomForm = adForm.querySelector('#room_number');
-const capacityForm = adForm.querySelector('#capacity');
-const typeForm = adForm.querySelector('#type');
-const timeinForm = adForm.querySelector('#timein');
-const timeoutForm = adForm.querySelector('#timeout');
-const addressForm = adForm.querySelector('#address');
-const slider = adForm.querySelector('.ad-form__slider');
-const resetButton = adForm.querySelector('.ad-form__reset');
+const MIN_LENGTH_TITLE = 30;
+const MAX_LENGTH_TITLE = 100;
+const MAX_PRICE = 100000;
 
-const pristine = new Pristine(adForm, {
+const adFormElement = document.querySelector('.ad-form');
+const titleFormElement = adFormElement.querySelector('#title');
+const priceFormElement = adFormElement.querySelector('#price');
+const roomFormElement = adFormElement.querySelector('#room_number');
+const capacityFormElement = adFormElement.querySelector('#capacity');
+const typeFormElement = adFormElement.querySelector('#type');
+const timeinFormElement = adFormElement.querySelector('#timein');
+const timeoutFormElement = adFormElement.querySelector('#timeout');
+const addressFormElement = adFormElement.querySelector('#address');
+const sliderElement = adFormElement.querySelector('.ad-form__slider');
+const resetButtonElement = adFormElement.querySelector('.ad-form__reset');
+
+const pristine = new Pristine(adFormElement, {
   classTo: 'ad-form__element',
   errorClass: 'ad-form__element--invalid',
   errorTextParent: 'ad-form__element',
@@ -27,9 +31,9 @@ const pristine = new Pristine(adForm, {
 });
 
 // Валидация заголовка
-const validateTitle = (value) => value.length >= 30 && value.length <= 100;
+const validateTitle = (value) => value.length >= MIN_LENGTH_TITLE && value.length <= MAX_LENGTH_TITLE;
 const wrongTitleMessage = 'Необходимо ввести от 30 до 100 символов';
-pristine.addValidator(titleForm, validateTitle, wrongTitleMessage);
+pristine.addValidator(titleFormElement, validateTitle, wrongTitleMessage);
 
 // Валидация типа жилья и цены
 const TypePriceMap = {
@@ -39,25 +43,25 @@ const TypePriceMap = {
   'house': 5000,
   'palace': 10000
 };
-const validatePrice = (value) => value >= TypePriceMap[typeForm.value] && value <= 100000;
+const validatePrice = (value) => value >= TypePriceMap[typeFormElement.value] && value <= MAX_PRICE;
 const getWrongPriceMessage = (value) => {
-  if (value < TypePriceMap[typeForm.value]) {
-    return `Минимальная стоимость составляет ${TypePriceMap[typeForm.value]}`;
+  if (value < TypePriceMap[typeFormElement.value]) {
+    return `Минимальная стоимость составляет ${TypePriceMap[typeFormElement.value]}`;
   }
   return 'Максимальная стоимость составляет 100000';
 };
-pristine.addValidator(priceForm, validatePrice, getWrongPriceMessage);
+pristine.addValidator(priceFormElement, validatePrice, getWrongPriceMessage);
 
 const onTypeOfLivingChange = () => {
-  priceForm.placeholder = TypePriceMap[typeForm.value];
+  priceFormElement.placeholder = TypePriceMap[typeFormElement.value];
 };
 
-typeForm.addEventListener('change', onTypeOfLivingChange);
+typeFormElement.addEventListener('change', onTypeOfLivingChange);
 
 // Валидация количества комнат и количества мест
 const validateCapacity = () => {
-  const roomValue = parseInt(roomForm.value, 10);
-  const capacityValue = parseInt(capacityForm.value, 10);
+  const roomValue = parseInt(roomFormElement.value, 10);
+  const capacityValue = parseInt(capacityFormElement.value, 10);
   const roomsValidCapacitiesMap = {
     1: [1],
     2: [1, 2],
@@ -68,28 +72,28 @@ const validateCapacity = () => {
   return currentRoomValue.includes(capacityValue);
 };
 const wrongCapacityMessage = 'Данное количество гостей недоступно';
-pristine.addValidator(capacityForm, validateCapacity, wrongCapacityMessage);
+pristine.addValidator(capacityFormElement, validateCapacity, wrongCapacityMessage);
 
-capacityForm.addEventListener('change', () => {
-  pristine.validate(capacityForm);
+capacityFormElement.addEventListener('change', () => {
+  pristine.validate(capacityFormElement);
 });
 
 // Время заезда и выезда
-timeinForm.addEventListener('change', () => {
-  timeoutForm.value = timeinForm.value;
+timeinFormElement.addEventListener('change', () => {
+  timeoutFormElement.value = timeinFormElement.value;
 });
 
-timeoutForm.addEventListener('change', () => {
-  timeinForm.value = timeoutForm.value;
+timeoutFormElement.addEventListener('change', () => {
+  timeinFormElement.value = timeoutFormElement.value;
 });
 
 // Reset
 const setCoordinates = (coordinates) => {
-  addressForm.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
+  addressFormElement.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
 };
 
 const resetForm = () => {
-  adForm.reset();
+  adFormElement.reset();
   mainPinMarker.setLatLng({
     lat: TokyoCoordinate.LAT,
     lng: TokyoCoordinate.LNG
@@ -99,8 +103,8 @@ const resetForm = () => {
     lng: TokyoCoordinate.LNG
   }, 10);
   map.closePopup();
-  mapFilter.reset();
-  slider.noUiSlider.reset();
+  mapFilterElement.reset();
+  sliderElement.noUiSlider.reset();
   clearPictures();
   setCoordinates(mainPinMarker.getLatLng());
 };
@@ -109,7 +113,7 @@ const onResetButtonClick = (evt) => {
   evt.preventDefault();
   resetForm();
 };
-resetButton.addEventListener('click', onResetButtonClick);
+resetButtonElement.addEventListener('click', onResetButtonClick);
 
 // Отправка формы
 const onFormSubmit = (evt) => {
@@ -128,14 +132,14 @@ const onFormSubmit = (evt) => {
   }
 };
 
-adForm.addEventListener('submit', onFormSubmit);
+adFormElement.addEventListener('submit', onFormSubmit);
 
 export {
-  addressForm,
-  priceForm,
-  slider,
-  typeForm,
+  addressFormElement,
+  priceFormElement,
+  sliderElement,
+  typeFormElement,
   TypePriceMap,
-  resetButton,
+  resetButtonElement,
   resetForm
 };
